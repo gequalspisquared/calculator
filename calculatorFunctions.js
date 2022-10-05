@@ -12,18 +12,21 @@ function multiply(a, b) {
 
 function divide(a, b) {
     if (b === 0) {
-        console.log("RHEE DON'T BREAK MATH");
         return 'RHEEE';
     }
-
     return a / b;
 }
 
+function roundToDecimal(num, decimalPlace) {
+    const factor = Math.pow(10, decimalPlace);
+    return Math.round(num * factor) / factor;
+}
+
 function operate(operator, a, b) {
-    if (operator === "+") return add(a, b);
-    if (operator === "-") return subtract(a, b);
-    if (operator === "*") return multiply(a, b);
-    if (operator === "/") return divide(a, b);
+    if (operator === "+") return roundToDecimal(add(a, b), 6);    
+    if (operator === "-") return roundToDecimal(subtract(a, b), 6);
+    if (operator === "*") return roundToDecimal(multiply(a, b), 6);
+    if (operator === "/") return roundToDecimal(divide(a, b), 6); 
     return null;
 }
 
@@ -32,6 +35,12 @@ function clearCalculator() {
     num2 = '';
     op = '';
     eq = '';
+    cur = '';
+    displayCalculator();
+    current.textContent = '0';
+}
+
+function delButton() {
     cur = '';
     displayCalculator();
     current.textContent = '0';
@@ -51,6 +60,12 @@ function processButton(e) {
     // if pressed === 'clear'
     if (pressed === 'AC') {
         clearCalculator();
+        return;
+    }
+
+    // if pressed === 'clear'
+    if (pressed === 'Del') {
+        delButton();
         return;
     }
 

@@ -38,6 +38,11 @@ button {
     border-style: none;
 }
 
+.clear-del {
+    border-style: none;
+    display: flex;
+}
+
 .buttons {
     display: grid;
     justify-content: center;
@@ -54,6 +59,23 @@ button {
     border-color: black;
 }
 
+.AC,
+.Del {
+    width: 180px;
+}
+
 .AC {
     margin-left: 20px;
+    border-color: red;
+    color: red;
+}
+
+.Del {
+    border-color: blue;
+    color: blue;
+}
+
+.op {
+    border-color: green;
+    color: green;
 }
