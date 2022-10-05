@@ -28,48 +28,82 @@ function operate(operator, a, b) {
 }
 
 function clearCalculator() {
-    num1 = NaN;
-    num2 = NaN;
-    op = null;
+    num1 = '';
+    num2 = '';
+    op = '';
     eq = '';
-    ans = '';
+    cur = '';
+    displayCalculator();
+    current.textContent = '0';
 }
 
+function displayCalculator() {
+    equation.textContent = num1 + op + num2;
+    current.textContent = cur;
+}
+
+// the logic here got pretty messy and was written via trial and error
+// hopefully this never needs to be touched
 function processButton(e) {
     const btn = e.target;
     const pressed = btn.classList[1];
 
-    if (num2 !== '' && ops.includes(pressed)) {
-        ans = operate(op, num1, Number(num2));
+    // if pressed === 'clear'
+    if (pressed === 'AC') {
+        clearCalculator();
+        return;
+    }
+
+    // if pressed === 'op'
+    if (ops.includes(pressed)) {
+        if (cur !== '') {
+            num2 = Number(cur);
+            if (num1 === '') {
+                num1 = Number(cur);
+                num2 = '';
+            }
+            if (op !== '') {
+                const ans = operate(op, num1, num2);
+                cur = ans;
+                num1 = ans;
+                num2 = '';
+            }
+            op = pressed;
+            displayCalculator();
+            cur = '';
+            return;
+        }
+        op = pressed;
+        cur = num1;
+        displayCalculator();
+        cur = '';
+        return;
+    }
+
+    // if pressed === '='
+    if (pressed === '=') {
+        let ans;
+        num2 = Number(cur);
+        if (num1 === '') {
+            num1 = Number(cur);
+            num2 = '';
+        }
+        if (op !== '') {
+            ans = operate(op, num1, num2);
+            cur = ans;
+        }
+        displayCalculator();
+        equation.textContent += '=';
+        op = '';
+        cur = '';
         num1 = ans;
         num2 = '';
-        op = pressed;
+        return;
     }
 
-    if (pressed === '=') {
-        if (!num2) num2 = 0;
-        if (!op) op = '+';
-        num1 = Number(num1);
-        num2 = Number(num2);
-        ans = operate(op, num1, num2);
-    }
-
-    if (ops.includes(pressed)) {
-        num1 = Number(num1);
-        op = pressed;
-    }
-
-    if (op === '') {
-        if (num1 === '0') num1 = '';
-        num1 += pressed;
-    } 
-
-    if (typeof num1 === 'number' && !ops.includes(pressed) && pressed !== '=') {
-        num2 += pressed;
-    }
-
-    equation.textContent = num1 + op + num2;
-    answer.textContent = ans;
+    // otherwise number
+    if (!cur.includes('.') || pressed !== '.') cur += pressed;
+    displayCalculator();
 }
 
 function addListeners() {
